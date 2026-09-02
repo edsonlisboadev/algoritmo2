@@ -1,6 +1,6 @@
 def conversor(celsius):
-    temp = 0
-    celsius = (temp - 32) * 5/9 
+    
+    celsius = (fah - 32) * 5/9 
     return celsius
 
 def ambiente(celsius, estado):
@@ -16,8 +16,15 @@ def ambiente(celsius, estado):
     return estado
 
 
+def relatorio(celsius):
+    for len(celsius) in range:
+        print("Saída: [ {celsius}°C = {fah}°F({estado})]")
+    return ""
+##ficamos aqui em return valor de entrada
 
 
+
+fah = float(input("Quantos fahrenheit está no momento?"))
 
 
     
