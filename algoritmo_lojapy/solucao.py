@@ -1,6 +1,5 @@
 """
-Loja de Papelaria — análise de vendas do semestre
-Algoritmos II · Univille
+
 Aluno: Edson Dal Bo Lisboa Junior
 
 Regras: use apenas listas, matrizes (lista de listas), dicionários, for/while e if.
@@ -49,7 +48,6 @@ for i in range(len(codigos)):
         soma = soma + vendas[i][j]
     total_por_produto.append(soma)
 
-# para somar uma coluna, o laço de fora passa a ser o dos meses
 total_por_mes = []
 for j in range(len(meses)):
     soma = 0
@@ -57,7 +55,6 @@ for j in range(len(meses)):
         soma = soma + vendas[i][j]
     total_por_mes.append(soma)
 
-# começa pelo primeiro mês e só troca se achar um MAIOR (assim o empate fica com o primeiro)
 mes_mais_vendido = meses[0]
 maior_venda = total_por_mes[0]
 for j in range(len(meses)):
@@ -104,7 +101,6 @@ reposicao = {}
 for i in range(len(codigos)):
     codigo = codigos[i]
     vendas_ultimos_3 = 0
-    # os 3 últimos meses são sempre os 3 últimos índices, tenha a matriz quantos meses tiver
     for j in range(len(meses) - 3, len(meses)):
         vendas_ultimos_3 = vendas_ultimos_3 + vendas[i][j]
     estoque = catalogo[codigo]["estoque"]
@@ -143,13 +139,13 @@ for posicao in range(len(top3)):
 
 maior_queda = {}
 for i in range(len(codigos)):
-    seguidas = 0   # zera a cada produto
+    seguidas = 0 
     maior = 0
     for j in range(1, len(meses)):
         if vendas[i][j] < vendas[i][j - 1]:
             seguidas = seguidas + 1
         else:
-            seguidas = 0   # subiu ou ficou igual: a sequência quebra
+            seguidas = 0
         if seguidas > maior:
             maior = seguidas
     maior_queda[codigos[i]] = maior
