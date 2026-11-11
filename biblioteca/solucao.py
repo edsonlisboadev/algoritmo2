@@ -42,8 +42,12 @@ def criar_livro(titulo, autor, ano, exemplares):
     "titulo", "autor", "ano" e "exemplares".
     Não mexe em nenhum acervo: só cria e devolve (return).
     """
-    # SEU CÓDIGO AQUI
-    pass
+    return {
+        "titulo": titulo,
+        "autor": autor,
+        "ano": ano,
+        "exemplares": exemplares,
+    }
 
 
 # ---- função 2 ----
@@ -52,8 +56,10 @@ def cadastrar_livro(acervo, codigo, livro):
     Se o código JÁ existe, não grava nada (o primeiro cadastro vale).
     Devolve True se cadastrou e False se recusou.
     """
-    # SEU CÓDIGO AQUI
-    pass
+    if codigo in acervo:
+        return False
+    acervo[codigo] = livro
+    return True
 
 
 # ---- função 3 ----
@@ -62,8 +68,9 @@ def buscar_livro(acervo, codigo):
     Devolve o dicionário do livro, ou None se o código não existe.
     Não altera o acervo.
     """
-    # SEU CÓDIGO AQUI
-    pass
+    if codigo in acervo:
+        return acervo[codigo]
+    return None
 
 
 # ---- função 4 ----
@@ -73,8 +80,12 @@ def atualizar_livro(acervo, codigo, campo, valor):
     Devolve False, sem alterar nada, se o código não existe OU se o campo
     não é um dos campos do livro. Senão altera e devolve True.
     """
-    # SEU CÓDIGO AQUI
-    pass
+    if codigo not in acervo:
+        return False
+    if campo not in ("titulo", "autor", "ano", "exemplares"):
+        return False
+    acervo[codigo][campo] = valor
+    return True
 
 
 # ---- função 5 ----
@@ -82,8 +93,10 @@ def listar_titulos(acervo):
     """Devolve uma LISTA com os títulos de todos os livros do acervo,
     na ordem em que estão no acervo. Acervo vazio devolve lista vazia.
     """
-    # SEU CÓDIGO AQUI
-    pass
+    titulos = []
+    for livro in acervo.values():
+        titulos.append(livro["titulo"])
+    return titulos
 
 
 # ===== PARTE 2 — empréstimos e remoção =====
@@ -96,8 +109,9 @@ def livros_do_aluno(emprestimos, aluno):
     Devolve a lista de códigos do aluno; se o aluno não está no dicionário
     (nunca pegou livro), devolve uma lista vazia. Não altera emprestimos.
     """
-    # SEU CÓDIGO AQUI
-    pass
+    if aluno in emprestimos:
+        return emprestimos[aluno]
+    return []
 
 
 # ---- função 7 ----
@@ -105,8 +119,10 @@ def livro_esta_emprestado(emprestimos, codigo):
     """Devolve True se ALGUM aluno está com o livro desse código,
     e False se ninguém está.
     """
-    # SEU CÓDIGO AQUI
-    pass
+    for livros in emprestimos.values():
+        if codigo in livros:
+            return True
+    return False
 
 
 # ---- função 8 ----
@@ -121,8 +137,18 @@ def emprestar_livro(acervo, emprestimos, aluno, codigo):
     emprestimos e devolve (True, "ok").
     Dica: use a função livros_do_aluno.
     """
-    # SEU CÓDIGO AQUI
-    pass
+    if codigo not in acervo:
+        return False, "inexistente"
+    if acervo[codigo]["exemplares"] == 0:
+        return False, "sem exemplar"
+    if len(livros_do_aluno(emprestimos, aluno)) >= 3:
+        return False, "limite"
+
+    acervo[codigo]["exemplares"] -= 1
+    if aluno not in emprestimos:
+        emprestimos[aluno] = []
+    emprestimos[aluno].append(codigo)
+    return True, "ok"
 
 
 # ---- função 9 ----
@@ -135,8 +161,14 @@ def devolver_livro(acervo, emprestimos, aluno, codigo):
     aparecer em emprestimos.
     Dica: use a função livros_do_aluno.
     """
-    # SEU CÓDIGO AQUI
-    pass
+    if codigo not in livros_do_aluno(emprestimos, aluno):
+        return False, "nao emprestado"
+
+    emprestimos[aluno].remove(codigo)
+    acervo[codigo]["exemplares"] += 1
+    if len(emprestimos[aluno]) == 0:
+        del emprestimos[aluno]
+    return True, "ok"
 
 
 # ---- função 10 ----
@@ -147,8 +179,12 @@ def remover_livro(acervo, emprestimos, codigo):
     Se aceitou: apaga o livro do acervo e devolve (True, "ok").
     Dica: use a função livro_esta_emprestado.
     """
-    # SEU CÓDIGO AQUI
-    pass
+    if codigo not in acervo:
+        return False, "inexistente"
+    if livro_esta_emprestado(emprestimos, codigo):
+        return False, "emprestado"
+    del acervo[codigo]
+    return True, "ok"
 
 
 # ===== PARTE 3 — relatórios =====
@@ -160,8 +196,11 @@ def relatorio_por_autor(acervo):
     """Devolve um dicionário: autor -> quantidade de títulos desse autor
     no acervo.
     """
-    # SEU CÓDIGO AQUI
-    pass
+    quantidades = {}
+    for livro in acervo.values():
+        autor = livro["autor"]
+        quantidades[autor] = quantidades.get(autor, 0) + 1
+    return quantidades
 
 
 # ---- função 12 ----
@@ -169,8 +208,11 @@ def relatorio_indisponiveis(acervo):
     """Devolve uma lista com os TÍTULOS dos livros com exemplares == 0,
     na ordem do acervo. Se todos têm exemplar, devolve lista vazia.
     """
-    # SEU CÓDIGO AQUI
-    pass
+    indisponiveis = []
+    for livro in acervo.values():
+        if livro["exemplares"] == 0:
+            indisponiveis.append(livro["titulo"])
+    return indisponiveis
 
 
 # ---- função 13 ----
@@ -182,8 +224,24 @@ def relatorio_emprestimos_mes(matriz, categorias, meses):
                             (empate: vale o primeiro)
     Não altera a matriz.
     """
-    # SEU CÓDIGO AQUI
-    pass
+    total_por_categoria = {}
+    for i in range(len(categorias)):
+        total = 0
+        for j in range(len(meses)):
+            total += matriz[i][j]
+        total_por_categoria[categorias[i]] = total
+
+    mes_mais_movimentado = meses[0]
+    maior_total = 0
+    for j in range(len(meses)):
+        total_mes = 0
+        for i in range(len(categorias)):
+            total_mes += matriz[i][j]
+        if j == 0 or total_mes > maior_total:
+            maior_total = total_mes
+            mes_mais_movimentado = meses[j]
+
+    return total_por_categoria, mes_mais_movimentado
 
 
 # ===== PARTE 4 (desafio) — juntando tudo =====
@@ -199,8 +257,22 @@ def processar_movimentos(acervo, emprestimos, movimentos):
     Devolve a lista das RECUSAS: tuplas (número_do_movimento, motivo),
     na ordem dos movimentos. Movimentos aceitos não entram na lista.
     """
-    # SEU CÓDIGO AQUI
-    pass
+    recusas = []
+    for numero, movimento in enumerate(movimentos, 1):
+        if movimento[0] == "emprestar":
+            resultado = emprestar_livro(
+                acervo, emprestimos, movimento[1], movimento[2]
+            )
+        elif movimento[0] == "devolver":
+            resultado = devolver_livro(
+                acervo, emprestimos, movimento[1], movimento[2]
+            )
+        else:
+            resultado = remover_livro(acervo, emprestimos, movimento[1])
+
+        if not resultado[0]:
+            recusas.append((numero, resultado[1]))
+    return recusas
 
 
 # ===== TESTE À MÃO (opcional) =====
