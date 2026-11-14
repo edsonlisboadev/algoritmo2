@@ -285,8 +285,9 @@ def processar_movimentos(acervo, emprestimos, movimentos):
 # ===== EXPLICAÇÃO (obrigatória — com suas palavras, 1 a 3 frases cada) =====
 # Pergunta 1: Na sua função cadastrar_livro, o que acontece quando o código já
 #             existe? Por que você fez assim?
-# R1:
+# R1: Se já tem o código dentro do dicionário ela retorna False na hora sem alterar nada, isso garante 
+# que não seja subscrito por engano.
 # Pergunta 2: As funções recebem acervo e emprestimos como PARÂMETRO, em vez de
 #             usar variáveis globais. Por que isso é melhor? E por que dentro de
 #             cadastrar_livro basta fazer acervo[codigo] = livro, sem "return acervo"?
-# R2:
+# R2: Isso é melhor porque evita efeitos colaterais e torna as funções mais fáceis de testar e reutilizar. Dentro de cadastrar_livro, não precisa retornar acervo porque dicionários são mutáveis; a função altera o dicionário original passado como parâmetro diretamente.
